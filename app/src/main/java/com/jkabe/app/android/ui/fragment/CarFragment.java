@@ -279,7 +279,6 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
         okHttpModel.get(Api.GET_DECICE_VERSION, params, Api.GET_DECICE_VERSION_ID, this);
     }
 
-
     private void qurycar() {
         String sign = "imeicode=" + SaveUtils.getCar().getImeicode() + "&memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID + Constants.SECREKEY;
         showProgressDialog(getActivity(), false);
