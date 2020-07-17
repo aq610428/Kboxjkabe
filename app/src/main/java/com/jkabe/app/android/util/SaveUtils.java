@@ -33,7 +33,7 @@ public class SaveUtils {
     /******用户车辆信息信息*****/
     public static void saveCar(CarInfo carInfo) {
         CacheDiskUtils cacheDiskUtils = CacheDiskUtils.getInstance();
-        cacheDiskUtils.put("carInfo", (Serializable) carInfo);
+        cacheDiskUtils.put("carInfo", carInfo);
     }
 
     /******用户车辆信息信息*****/

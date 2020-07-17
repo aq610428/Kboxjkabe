@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import com.jkabe.app.android.R;
 import com.jkabe.app.android.base.BaseApplication;
 import com.jkabe.app.android.base.BaseFragment;
+import com.jkabe.app.android.bean.CarInfo;
 import com.jkabe.app.android.bean.CommonalityModel;
 import com.jkabe.app.android.bean.UserInfo;
 import com.jkabe.app.android.config.Api;
@@ -112,6 +113,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         text_about.setOnClickListener(this);
         text_edit.setOnClickListener(this);
         text_bind.setOnClickListener(this);
+
+        CarInfo carInfo = SaveUtils.getCar();
+        if (carInfo!=null){
+            text_bind.setVisibility(View.VISIBLE);
+        }else{
+            text_bind.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -128,7 +136,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.text_car:
                 startActivity(new Intent(getContext(), VehicleActivity.class));
                 break;
-
 
             case R.id.text_bind:
                 showBindDialog();
@@ -248,9 +255,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void bind(String code) {
-        String sign ="id="+ SaveUtils.getCar().getId()+"&imeicode="+SaveUtils.getCar().getImeicode()+"&loginname="+
+        String sign = "id=" + SaveUtils.getCar().getId() + "&imeicode=" + SaveUtils.getCar().getImeicode() + "&loginname=" +
                 SaveUtils.getSaveInfo().getLoginname()
-                +"&memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID +"&vcode="+code+ Constants.SECREKEY;
+                + "&memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID + "&vcode=" + code + Constants.SECREKEY;
         showProgressDialog(getActivity(), false);
         Map<String, String> params = okHttpModel.getParams();
         params.put("apptype", Constants.TYPE);
@@ -283,6 +290,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 switch (id) {
                     case Api.GET_UNMODEL_BIND_ID:
                         ToastUtil.showToast(commonality.getErrorDesc());
+                        SaveUtils.saveCar(null);
                         break;
                     case Api.GET_MOBILCODE_ID:
                         ToastUtil.showToast(commonality.getErrorDesc());
