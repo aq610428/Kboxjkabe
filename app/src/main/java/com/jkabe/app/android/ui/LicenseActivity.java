@@ -5,11 +5,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.jkabe.app.android.R;
 import com.jkabe.app.android.base.BaseActivity;
 import com.jkabe.app.android.base.BaseApplication;
 import com.jkabe.app.android.config.Api;
 import com.jkabe.app.android.config.okHttpModel;
+import com.jkabe.app.android.glide.GlideUtils;
 import com.jkabe.app.android.util.Constants;
 import com.jkabe.app.android.util.LogUtils;
 import com.jkabe.app.android.util.Md5Util;
@@ -25,12 +27,15 @@ import com.yanzhenjie.album.AlbumFile;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
@@ -99,7 +104,6 @@ public class LicenseActivity extends BaseActivity {
     }
 
 
-
     private void selectPhoto() {
         Album.initialize(AlbumConfig.newBuilder(this)
                 .setAlbumLoader(new MediaLoader())
@@ -144,15 +148,16 @@ public class LicenseActivity extends BaseActivity {
     }
 
 
-
     String result;
+
     private void upLoad(File file) {
-        String sign = "memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID + Constants.SECREKEY;
+        String sign = "id=" + SaveUtils.getCar().getId() + "&memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID + Constants.SECREKEY;
         showProgressDialog(this, false);
         Map<String, String> params = okHttpModel.getParams();
         params.put("apptype", Constants.TYPE);
-        params.put("partnerid", Constants.PARTNERID);
+        params.put("id",SaveUtils.getCar().getId());
         params.put("memberid", SaveUtils.getSaveInfo().getId());
+        params.put("partnerid", Constants.PARTNERID);
         params.put("sign", Md5Util.encode(sign));
         OkGo.<String>post(Api.GET_UPLOAD_IMG).isMultipart(true).tag(BaseApplication.getContext()).params(params).params("file", file).execute(new StringCallback() {
             @Override
@@ -162,6 +167,7 @@ public class LicenseActivity extends BaseActivity {
                         JSONObject jsonObject = new JSONObject(response.body());
                         LogUtils.e(jsonObject);
                         result = jsonObject.optString("result");
+                        GlideUtils.setImageUrl(result,iv_photo);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -176,7 +182,6 @@ public class LicenseActivity extends BaseActivity {
             }
         });
     }
-
 
 
 }

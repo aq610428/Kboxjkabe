@@ -21,9 +21,7 @@ import com.jkabe.app.android.util.DateUtils;
 import com.jkabe.app.android.util.JsonParse;
 import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
-import com.jkabe.app.android.util.ToastUtil;
 import com.jkabe.app.android.util.Utility;
-
 import org.json.JSONObject;
 
 import java.util.Date;

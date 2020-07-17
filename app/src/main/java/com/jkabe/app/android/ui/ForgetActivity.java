@@ -183,7 +183,6 @@ public class ForgetActivity extends BaseActivity implements NetWorkListener {
      * 倒计时显示
      */
     CountDownTimer timer;
-
     private void countDown() {
         timer = new CountDownTimer(90000, 1000) {
             @Override
@@ -199,7 +198,6 @@ public class ForgetActivity extends BaseActivity implements NetWorkListener {
 
             }
         }.start();
-
     }
 
     public void queryCode() {

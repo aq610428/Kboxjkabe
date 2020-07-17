@@ -137,6 +137,10 @@ public interface Api {
     int GET_AGE_DEVICE_ID = 100045;
 
 
+    /******预警信息******/
+    String GET_AGE_DEVICE1 = Config.getOpenNewApi() + "/device/getdevicelocationandobddata";
+    int GET_AGE_DEVICE1_ID = 100066;
+
 
     /******预警信息******/
     String GET_AGE_DEVICE_INFO = Config.getOpenNewApi() + "/device/getmemberdevicealarmpropertiesinfo";
@@ -161,5 +165,32 @@ public interface Api {
     /******违章查询******/
     String GET_TRACK_RESULT = Config.getOpenNewApi() + "/device/getvehicletestresult";
     int GET_TRACK_RESULT_ID = 100051;
+
+    /******品牌列表******/
+    String GET_USER_BRAND = Config.getOpenNewApi() + "/resource/getcarbrandlist";
+    int GET_USER_BRAND_ID = 100035;
+
+    /******车型列表******/
+    String GET_USER_LISR = Config.getOpenNewApi() + "/resource/getcarmodellist";
+    int GET_USER_LISR_ID = 100036;
+
+
+    /******年款车型******/
+    String GET_YEAR_LISR = Config.getOpenNewApi() + "/resource/getcarmodelyearlist";
+    int GET_YEAR_LISR_ID = 100037;
+
+    /******年款车型******/
+    String GET_MODEL_LISR = Config.getOpenNewApi() + "/store/saveStoreUserCar";
+    int GET_MODEL_LISR_ID = 100038;
+
+
+    /******绑定车辆******/
+    String GET_MODEL_BIND = Config.getOpenNewApi() + "/device/bindingdeviceinfo";
+    int GET_MODEL_BIND_ID = 100039;
+
+    /******绑定车辆******/
+    String GET_UNMODEL_BIND = Config.getOpenNewApi() + "/device/unbindingdeviceinfo";
+    int GET_UNMODEL_BIND_ID = 100071;
+
 
 }

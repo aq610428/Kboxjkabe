@@ -133,12 +133,29 @@
         <activity
             android:name=".ui.MedicalActivity"
             android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".ui.LocationEarlyActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.LocationActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.LicenseActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.BindActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.BrandCarActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.VehicleActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.ParameterActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.UserActivity"

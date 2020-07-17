@@ -60,8 +60,9 @@ public class LicenseAdapter extends BaseAdapter {
         vh.fak.setText("¥" + fine);
         vh.kouf.setText(score);
         vh.stateTv.setText(tag);
-        vh.searchTime.setText(vo.getVio_time());
-
+        String start = vo.getVio_time().substring(0, vo.getVio_time().length() - 8);
+        String end = vo.getVio_time().substring(vo.getVio_time().length() - 8, vo.getVio_time().length());
+        vh.searchTime.setText(start + " " + end);
         return convertView;
     }
 

@@ -75,6 +75,15 @@ public class Utility {
         }
     }
 
+    /**
+     * 判断当str1为空时返回str2
+     * @param str1
+     * @param str2
+     * @return
+     */
+    public static String judgeStrState(String str1, String str2){
+        return (str1==null || str1.length()<=0)?str2:str1;
+    }
 
     public static boolean isEmpty(String str) {
         return (str == null || str.length() == 0 || str.trim().equals("") || str.equals("null"));

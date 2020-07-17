@@ -27,12 +27,13 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="60dp"
                 android:gravity="center|left"
-                android:text="粤A12345"
+                android:text="绑定"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/ctv_sizen_25"
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/iv_set"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -68,7 +69,7 @@
                     android:layout_marginBottom="30dp"
                     android:background="@drawable/base_press"
                     android:padding="10dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/icon_location"

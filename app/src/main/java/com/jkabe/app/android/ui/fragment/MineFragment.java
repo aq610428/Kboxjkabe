@@ -1,36 +1,57 @@
 package com.jkabe.app.android.ui.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.jkabe.app.android.R;
 import com.jkabe.app.android.base.BaseApplication;
 import com.jkabe.app.android.base.BaseFragment;
+import com.jkabe.app.android.bean.CommonalityModel;
 import com.jkabe.app.android.bean.UserInfo;
+import com.jkabe.app.android.config.Api;
+import com.jkabe.app.android.config.NetWorkListener;
+import com.jkabe.app.android.config.okHttpModel;
 import com.jkabe.app.android.glide.GlideUtils;
 import com.jkabe.app.android.ui.AboutActivity;
 import com.jkabe.app.android.ui.InvitationActivity;
 import com.jkabe.app.android.ui.LoginActivity;
 import com.jkabe.app.android.ui.PreviewActivity;
 import com.jkabe.app.android.ui.UserActivity;
+import com.jkabe.app.android.ui.VehicleActivity;
+import com.jkabe.app.android.util.Constants;
+import com.jkabe.app.android.util.JsonParse;
 import com.jkabe.app.android.util.LogUtils;
+import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
+import com.jkabe.app.android.util.ToastUtil;
 import com.jkabe.app.android.util.Utility;
 import com.jkabe.app.android.weight.PreferenceUtils;
 import com.jkabe.app.android.weight.RuntimeRationale;
 import com.jkabe.app.android.zxing.android.CaptureActivity;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
+
+import org.json.JSONObject;
+
+import java.util.Map;
+
 import crossoverone.statuslib.StatusUtil;
+
 import static android.app.Activity.RESULT_OK;
 
 /**
@@ -38,7 +59,7 @@ import static android.app.Activity.RESULT_OK;
  * @date: 2020/7/2
  * @name:我的
  */
-public class MineFragment extends BaseFragment implements View.OnClickListener {
+public class MineFragment extends BaseFragment implements View.OnClickListener, NetWorkListener {
     private View rootView;
     private TextView text_name, text_edit, text_invitation, text_code, text_contacts, text_bind, text_car, text_about, text_out;
     private UserInfo info;
@@ -84,12 +105,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         text_out = getView(rootView, R.id.text_out);
         text_out.setOnClickListener(this);
         text_edit.setOnClickListener(this);
-
+        text_car.setOnClickListener(this);
         text_invitation.setOnClickListener(this);
         text_code.setOnClickListener(this);
         text_contacts.setOnClickListener(this);
         text_about.setOnClickListener(this);
         text_edit.setOnClickListener(this);
+        text_bind.setOnClickListener(this);
     }
 
     @Override
@@ -102,6 +124,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.text_edit:
                 startActivity(new Intent(getContext(), UserActivity.class));
+                break;
+            case R.id.text_car:
+                startActivity(new Intent(getContext(), VehicleActivity.class));
+                break;
+
+
+            case R.id.text_bind:
+                showBindDialog();
                 break;
 
             case R.id.text_invitation:
@@ -120,12 +150,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.text_out:
-                SaveUtils.clealCacheDisk();
-                final SharedPreferences sharedPreferences =getActivity().getSharedPreferences("north", Context.MODE_PRIVATE);
-                PreferenceUtils.clearPreference(getContext(),sharedPreferences);
-                BaseApplication.activityTaskManager.closeAllActivityExceptOne("LoginActivity");
-                startActivity(new Intent(getContext(), LoginActivity.class));
-                getActivity().finish();
+                showDialog();
                 break;
         }
     }
@@ -156,4 +181,147 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             }
         }
     }
+
+
+    public void showDialog() {
+        Dialog dialog = new Dialog(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_layout_mine, null);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(view);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SaveUtils.clealCacheDisk();
+                final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("north", Context.MODE_PRIVATE);
+                PreferenceUtils.clearPreference(getContext(), sharedPreferences);
+                BaseApplication.activityTaskManager.closeAllActivityExceptOne("LoginActivity");
+                startActivity(new Intent(getContext(), LoginActivity.class));
+                getActivity().finish();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+
+    public void showBindDialog() {
+        Dialog dialog = new Dialog(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_layout_bind, null);
+        EditText et_code = view.findViewById(R.id.et_code);
+        TextView btn_code = view.findViewById(R.id.btn_code);
+        btn_code.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                queryCode();
+                countDown(btn_code);
+            }
+        });
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(view);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        view.findViewById(R.id.confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String code = et_code.getText().toString();
+                if (Utility.isEmpty(code)) {
+                    ToastUtil.showToast("验证码不能为空");
+                    return;
+                }
+                bind(code);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void bind(String code) {
+        String sign ="id="+ SaveUtils.getCar().getId()+"&imeicode="+SaveUtils.getCar().getImeicode()+"&loginname="+
+                SaveUtils.getSaveInfo().getLoginname()
+                +"&memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID +"&vcode="+code+ Constants.SECREKEY;
+        showProgressDialog(getActivity(), false);
+        Map<String, String> params = okHttpModel.getParams();
+        params.put("apptype", Constants.TYPE);
+        params.put("id", SaveUtils.getCar().getId() + "");
+        params.put("imeicode", SaveUtils.getCar().getImeicode() + "");
+        params.put("loginname", SaveUtils.getSaveInfo().getLoginname() + "");
+        params.put("memberid", SaveUtils.getSaveInfo().getId() + "");
+        params.put("partnerid", Constants.PARTNERID);
+        params.put("vcode", code + "");
+        params.put("sign", Md5Util.encode(sign));
+        okHttpModel.get(Api.GET_UNMODEL_BIND, params, Api.GET_UNMODEL_BIND_ID, this);
+    }
+
+    public void queryCode() {
+        String sign = "mobile=" + SaveUtils.getSaveInfo().getMobile() + "&partnerid=" + Constants.PARTNERID + Constants.SECREKEY;
+        showProgressDialog(getActivity(), false);
+        Map<String, String> params = okHttpModel.getParams();
+        params.put("mobile", SaveUtils.getSaveInfo().getMobile());
+        params.put("apptype", Constants.TYPE);
+        params.put("partnerid", Constants.PARTNERID);
+        params.put("sign", Md5Util.encode(sign));
+        okHttpModel.get(Api.GET_MOBILCODE, params, Api.GET_MOBILCODE_ID, this);
+    }
+
+
+    @Override
+    public void onSucceed(JSONObject object, int id, CommonalityModel commonality) {
+        if (object != null && commonality != null && !Utility.isEmpty(commonality.getStatusCode())) {
+            if (Constants.SUCESSCODE.equals(commonality.getStatusCode())) {
+                switch (id) {
+                    case Api.GET_UNMODEL_BIND_ID:
+                        ToastUtil.showToast(commonality.getErrorDesc());
+                        break;
+                    case Api.GET_MOBILCODE_ID:
+                        ToastUtil.showToast(commonality.getErrorDesc());
+                        break;
+                }
+            } else {
+                ToastUtil.showToast(commonality.getErrorDesc());
+            }
+        }
+        stopProgressDialog();
+    }
+
+    @Override
+    public void onFail() {
+        stopProgressDialog();
+    }
+
+    @Override
+    public void onError(Exception e) {
+        stopProgressDialog();
+    }
+
+    CountDownTimer timer;
+
+    private void countDown(TextView btn_code) {
+        timer = new CountDownTimer(90000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                btn_code.setEnabled(false);
+                btn_code.setText("已发送(" + millisUntilFinished / 1000 + ")");
+            }
+
+            @Override
+            public void onFinish() {
+                btn_code.setEnabled(true);
+                btn_code.setText("重新获取验证码");
+
+            }
+        }.start();
+    }
+
 }

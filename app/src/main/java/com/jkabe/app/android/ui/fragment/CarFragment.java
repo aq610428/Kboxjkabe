@@ -5,12 +5,14 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,12 +43,15 @@ import com.jkabe.app.android.config.Api;
 import com.jkabe.app.android.config.NetWorkListener;
 import com.jkabe.app.android.config.okHttpModel;
 import com.jkabe.app.android.ui.BatteryActivity;
+import com.jkabe.app.android.ui.BindActivity;
 import com.jkabe.app.android.ui.DrivingLicenseActivity;
 import com.jkabe.app.android.ui.EarlyActivity;
 import com.jkabe.app.android.ui.ElectronicActivity;
 import com.jkabe.app.android.ui.MedicalActivity;
 import com.jkabe.app.android.ui.OilActivity;
+import com.jkabe.app.android.ui.ParameterActivity;
 import com.jkabe.app.android.ui.TravelActivity;
+import com.jkabe.app.android.ui.VehicleActivity;
 import com.jkabe.app.android.util.BigDecimalUtils;
 import com.jkabe.app.android.util.Constants;
 import com.jkabe.app.android.util.JsonParse;
@@ -62,9 +67,7 @@ import com.jkabe.app.android.weight.SensorEventHelper;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
-
 import org.json.JSONObject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +98,9 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
     private CarVo carVo;
     private RelativeLayout rl_edition;
     private TextView text_address, text_date, text_oll, text_early;
-    private LinearLayout ll_write,ll_detection,ll_travel;
+    private LinearLayout ll_write, ll_detection, ll_travel;
+    final Handler mHandler = new Handler();
+    private ImageView iv_set;
 
 
     @Nullable
@@ -131,7 +136,6 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
                     }
                 })
                 .start();
-        qury();
     }
 
 
@@ -140,11 +144,13 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
         super.onResume();
         StatusBarUtil.setTranslucentStatus(getActivity());
         initView();
+        qury();
     }
 
     private void initView() {
-        ll_travel= getView(rootView, R.id.ll_travel);
-        ll_detection= getView(rootView, R.id.ll_detection);
+        iv_set = getView(rootView, R.id.iv_set);
+        ll_travel = getView(rootView, R.id.ll_travel);
+        ll_detection = getView(rootView, R.id.ll_detection);
         ll_write = getView(rootView, R.id.ll_write);
         text_early = getView(rootView, R.id.text_early);
         text_oll = getView(rootView, R.id.text_oll);
@@ -171,6 +177,8 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
         ll_write.setOnClickListener(this);
         ll_detection.setOnClickListener(this);
         ll_travel.setOnClickListener(this);
+        text_num.setOnClickListener(this);
+        iv_set.setOnClickListener(this);
     }
 
     private void setUpMap() {
@@ -187,40 +195,57 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.text_attery:
-                startActivity(new Intent(getContext(), BatteryActivity.class));
-                break;
-            case R.id.text_electronic:
-                startActivity(new Intent(getContext(), ElectronicActivity.class));
-                break;
-            case R.id.ll_detection:
-                startActivity(new Intent(getContext(), DrivingLicenseActivity.class));
-                break;
-            case R.id.text_oll:
-                String oil = PreferenceUtils.getPrefString(getContext(), Constants.OIL, "");
-                if (Utility.isEmpty(oil)) {
-                    showDialog();
-                } else {
-                    startActivity(new Intent(getContext(), OilActivity.class));
-                }
-                break;
-            case R.id.text_early:
-                startActivity(new Intent(getContext(), EarlyActivity.class));
-                break;
-            case R.id.ll_write:
-                if (Utility.isEmpty(PreferenceUtils.getPrefString(getContext(), Constants.OIL, ""))) {
-                    showDialog();
-                } else {
-                    startActivity(new Intent(getContext(), TravelActivity.class));
-                }
-                break;
-            case R.id.ll_travel:
-                startActivity(new Intent(getContext(), MedicalActivity.class));
-                break;
+        if (v.getId() == R.id.text_num) {
+            if ("绑定".equals(text_num)) {
+                startActivity(new Intent(getContext(), BindActivity.class));
+            } else {
+                startActivity(new Intent(getContext(), VehicleActivity.class));
+            }
+        } else {
+            if (carVo == null) {
+                ToastUtil.showToast("请您绑定车辆");
+                return;
+            }
+            switch (v.getId()) {
+                case R.id.text_attery:
+                    startActivity(new Intent(getContext(), BatteryActivity.class));
+                    break;
+                case R.id.text_electronic:
+                    startActivity(new Intent(getContext(), ElectronicActivity.class));
+                    break;
+                case R.id.ll_detection:
+                    startActivity(new Intent(getContext(), DrivingLicenseActivity.class));
+                    break;
+                case R.id.text_oll:
+                    String oil = PreferenceUtils.getPrefString(getContext(), Constants.OIL, "");
+                    if (Utility.isEmpty(oil)) {
+                        showDialog();
+                    } else {
+                        startActivity(new Intent(getContext(), OilActivity.class));
+                    }
+                    break;
+                case R.id.text_early:
+                    startActivity(new Intent(getContext(), EarlyActivity.class));
+                    break;
+                case R.id.ll_write:
+                    if (Utility.isEmpty(PreferenceUtils.getPrefString(getContext(), Constants.OIL, ""))) {
+                        showDialog();
+                    } else {
+                        startActivity(new Intent(getContext(), TravelActivity.class));
+                    }
+                    break;
+                case R.id.ll_travel:
+                    startActivity(new Intent(getContext(), MedicalActivity.class));
+                    break;
+                case R.id.iv_set:
+                    startActivity(new Intent(getContext(), ParameterActivity.class));
+                    break;
 
+            }
         }
+
     }
+
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
@@ -316,12 +341,12 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
     }
 
     private void updateMap() {
-        rl_edition.setVisibility(View.VISIBLE);
         String address = carVo.getLocationInfo().getAddress();
         CoordinateConverter converter = new CoordinateConverter(getContext());
         converter.from(CoordinateConverter.CoordType.GPS);
         if (!Utility.isEmpty(carVo.getLocationInfo().getLat())) {
             try {
+                rl_edition.setVisibility(View.VISIBLE);
                 DPoint dPoint = new DPoint();
                 dPoint.setLatitude(Double.parseDouble(carVo.getLocationInfo().getLat()));
                 dPoint.setLongitude(Double.parseDouble(carVo.getLocationInfo().getLng()));
@@ -357,9 +382,26 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
         } else {
             text_num.setText("绑定");
         }
-        qurycar();
+        mHandler.removeCallbacks(runnable);
+        mHandler.postDelayed(runnable, 100);
     }
 
+    /*******1分钟定位一次*****/
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            qurycar();
+            mHandler.postDelayed(this, 60 * 1000);
+            LogUtils.e("一分钟执行一次");
+        }
+    };
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeCallbacks(runnable);
+    }
 
     @Override
     public void onFail() {

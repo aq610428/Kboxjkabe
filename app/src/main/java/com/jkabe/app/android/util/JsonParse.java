@@ -2,6 +2,8 @@ package com.jkabe.app.android.util;
 
 import com.jkabe.app.android.bean.BannerVo;
 import com.jkabe.app.android.bean.Battery;
+import com.jkabe.app.android.bean.Brand;
+import com.jkabe.app.android.bean.BrandVo;
 import com.jkabe.app.android.bean.CarInfo;
 import com.jkabe.app.android.bean.CarRulesItemVO;
 import com.jkabe.app.android.bean.CarRulesVO;
@@ -15,12 +17,15 @@ import com.jkabe.app.android.bean.ImageInfo;
 import com.jkabe.app.android.bean.LatInfo;
 import com.jkabe.app.android.bean.LeftVo;
 import com.jkabe.app.android.bean.Money;
+import com.jkabe.app.android.bean.OdbAndLocationVO;
 import com.jkabe.app.android.bean.Oil;
 import com.jkabe.app.android.bean.OrderInfo;
 import com.jkabe.app.android.bean.StoreInfo;
 import com.jkabe.app.android.bean.Travrt;
 import com.jkabe.app.android.bean.UserInfo;
 import com.jkabe.app.android.bean.Verison;
+import com.jkabe.app.android.bean.YearCar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +54,26 @@ public class JsonParse {
         Verison verison = (Verison) JsonUtilComm.jsonToBean(jsonObject.toString(), Verison.class);
         return verison;
     }
+    public static List<BrandVo> getBespokebrandsJson1(JSONObject object) {
+        List<BrandVo> infos = new ArrayList<>();
+        JSONArray jsonArray = object.optJSONArray("result");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            BrandVo info = (BrandVo) JsonUtilComm.jsonToBean(jsonArray.optJSONObject(i).toString(), BrandVo.class);
+            infos.add(info);
+        }
+        return infos;
+    }
+
+    public static List<YearCar> getbrandList(JSONObject object) {
+        List<YearCar> infos = new ArrayList<>();
+        JSONArray jsonArray = object.optJSONArray("result");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            YearCar info = (YearCar) JsonUtilComm.jsonToBean(jsonArray.optJSONObject(i).toString(), YearCar.class);
+            infos.add(info);
+        }
+        return infos;
+    }
+
 
 
     public static List<Money> getBespokemoniesJson(JSONObject object) {
@@ -61,7 +86,15 @@ public class JsonParse {
         }
         return infos;
     }
-
+    public static List<Brand> getBespokebrandsJson(JSONObject object) {
+        List<Brand> infos = new ArrayList<>();
+        JSONArray jsonArray = object.optJSONArray("result");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            Brand info = (Brand) JsonUtilComm.jsonToBean(jsonArray.optJSONObject(i).toString(), Brand.class);
+            infos.add(info);
+        }
+        return infos;
+    }
 
     public static UserInfo getUserInfo(JSONObject object) {
         JSONObject jsonObject = object.optJSONObject("result");
@@ -225,6 +258,12 @@ public class JsonParse {
     public static HealthItemVO getHealthItemVOJson(JSONObject object) {
         JSONObject jsonObject = object.optJSONObject("result");
         HealthItemVO healthItemVO = (HealthItemVO) JsonUtilComm.jsonToBean(jsonObject.toString(), HealthItemVO.class);
+        return healthItemVO;
+    }
+
+    public static OdbAndLocationVO buildNonDefaultMapper(JSONObject object) {
+        JSONObject jsonObject = object.optJSONObject("result");
+        OdbAndLocationVO healthItemVO = (OdbAndLocationVO) JsonUtilComm.jsonToBean(jsonObject.toString(), OdbAndLocationVO.class);
         return healthItemVO;
     }
 }

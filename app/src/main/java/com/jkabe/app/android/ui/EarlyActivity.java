@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -24,7 +26,9 @@ import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
 import com.jkabe.app.android.util.Utility;
 import com.jkabe.app.android.weight.NoDataView;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -140,6 +144,15 @@ public class EarlyActivity extends BaseActivity implements OnLoadMoreListener, O
             electronics.addAll(voList);
             adapter.setData(electronics);
         }
+
+        adapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(EarlyActivity.this, LocationEarlyActivity.class);
+                intent.putExtra("info", electronics.get(position));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
