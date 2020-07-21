@@ -5,12 +5,15 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.jkabe.app.android.R;
 import com.jkabe.app.android.base.BaseActivity;
 import com.jkabe.app.android.base.BaseApplication;
 import com.jkabe.app.android.util.QRCodeUtil;
 import com.jkabe.app.android.util.SaveUtils;
+import com.jkabe.app.android.util.ShotShareUtil;
 import com.jkabe.app.android.util.StatusBarUtil;
 
 /**
@@ -21,6 +24,7 @@ import com.jkabe.app.android.util.StatusBarUtil;
 public class InvitationActivity extends BaseActivity {
     private TextView text_head, text_invitation;
     private ImageView icon_code;
+    private RelativeLayout rl_share;
 
     @Override
     protected void initCreate(Bundle savedInstanceState) {
@@ -30,11 +34,12 @@ public class InvitationActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        rl_share= getView(R.id.rl_share);
         text_head = getView(R.id.text_head);
-        icon_code= getView(R.id.icon_code);
+        icon_code = getView(R.id.icon_code);
         text_invitation = getView(R.id.text_invitation);
-        text_invitation.setOnClickListener(this);
         text_head.setOnClickListener(this);
+        rl_share.setOnClickListener(this);
     }
 
     @Override
@@ -55,12 +60,12 @@ public class InvitationActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.text_head:
                 finish();
                 break;
-            case R.id.text_invitation:
-
+            case R.id.rl_share:
+                ShotShareUtil.shotShare(this);
                 break;
         }
     }

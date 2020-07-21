@@ -1,5 +1,6 @@
 package com.jkabe.app.android.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.jkabe.app.android.R;
@@ -22,12 +25,15 @@ import com.jkabe.app.android.bean.UserInfo;
 import com.jkabe.app.android.config.Api;
 import com.jkabe.app.android.config.NetWorkListener;
 import com.jkabe.app.android.config.okHttpModel;
+import com.jkabe.app.android.ui.PreviewActivity;
 import com.jkabe.app.android.util.Constants;
 import com.jkabe.app.android.util.JsonParse;
 import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
 import com.jkabe.app.android.util.Utility;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +45,7 @@ import crossoverone.statuslib.StatusUtil;
  * @date: 2020/7/2
  * @name:资产
  */
-public class RecordFragment extends BaseFragment implements View.OnClickListener , OnRefreshListener, NetWorkListener {
+public class RecordFragment extends BaseFragment implements View.OnClickListener, OnRefreshListener, NetWorkListener {
     private View rootView;
     private SwipeToLoadLayout swipeToLoadLayout;
     private RecyclerView swipe_target;
@@ -113,7 +119,10 @@ public class RecordFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-
+        Intent intent = new Intent(getContext(), PreviewActivity.class);
+        intent.putExtra("url", "http://kb.jkabe.com/app/dlchezhen");
+        intent.putExtra("name", "积分兑换");
+        startActivity(intent);
     }
 
     @Override

@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.aspsine.swipetoloadlayout.OnLoadMoreListener;
 import com.aspsine.swipetoloadlayout.OnRefreshListener;
 import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
@@ -26,9 +24,7 @@ import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
 import com.jkabe.app.android.util.Utility;
 import com.jkabe.app.android.weight.NoDataView;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

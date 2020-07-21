@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 28
@@ -25,7 +26,7 @@ android {
 
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : "858b357d94ecb1e15965c6b2", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_APPKEY : "05b72aedf04ec1ec28f50a8d", //JPush 上注册的包名对应的 Appkey.
                 JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
         ]
 
@@ -34,10 +35,10 @@ android {
     //签名信息
     signingConfigs {
         release {
-            storeFile file('becca.jks')
-            storePassword 'becca2020'
-            keyAlias 'becca'
-            keyPassword 'becca2020'
+            storeFile file('jkbStoreKey')
+            storePassword 'asdfghjkl321'
+            keyAlias 'jkb'
+            keyPassword 'asdfghjkl321'
         }
     }
     buildTypes {
@@ -73,10 +74,7 @@ android {
         release1002 {
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "1002"]
         }
-
     }
-
-
 }
 
 dependencies {
@@ -115,4 +113,24 @@ dependencies {
     implementation files('libs/core-3.0.0.jar')
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.haibin:calendarview:3.6.6'
+}
+
+MobSDK {
+    //卡贝配置
+    appKey "2ca99ecb99edc"
+    appSecret "8747b174ebfb3f4af6d13ebdab822cec"
+    ShareSDK {
+        loopShare true
+        devInfo {
+            Wechat {
+                appId "wxb9f11b72eaba96df"
+                appSecret "2d169e44ea612f1b5f3037ce9f272bd3"
+                shareByAppClient true
+                userName "gh_afb25ac019c9"
+                path "pages/index/index.html?id=1"
+                withShareTicket true
+                miniprogramType 3
+            }
+        }
+    }
 }

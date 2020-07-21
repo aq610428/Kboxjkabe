@@ -29,7 +29,9 @@
     <color name="blacka5">#A5A5A5</color>
     <color name="blue">#81c2f4</color>
     <color name="default_shadow_color">#2a000000</color>
-
+    <color name="battery_color_zhengchang">#32F83E</color>
+    <color name="battery_color_nozhengchang">#F4E842</color>
+    <color name="battery_color_kuidian">#D62118</color>
     <color name="blue03">#036eb7</color>
     <color name="blackef">#EFEFEF</color>
     <color name="black7e">#7E7E7E</color>

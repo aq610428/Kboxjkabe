@@ -29,13 +29,13 @@ import com.jkabe.app.android.config.NetWorkListener;
 import com.jkabe.app.android.config.okHttpModel;
 import com.jkabe.app.android.glide.GlideUtils;
 import com.jkabe.app.android.ui.AboutActivity;
+import com.jkabe.app.android.ui.BindActivity;
 import com.jkabe.app.android.ui.InvitationActivity;
 import com.jkabe.app.android.ui.LoginActivity;
 import com.jkabe.app.android.ui.PreviewActivity;
 import com.jkabe.app.android.ui.UserActivity;
 import com.jkabe.app.android.ui.VehicleActivity;
 import com.jkabe.app.android.util.Constants;
-import com.jkabe.app.android.util.JsonParse;
 import com.jkabe.app.android.util.LogUtils;
 import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
@@ -115,9 +115,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         text_bind.setOnClickListener(this);
 
         CarInfo carInfo = SaveUtils.getCar();
-        if (carInfo!=null){
+        if (carInfo != null) {
             text_bind.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             text_bind.setVisibility(View.GONE);
         }
     }
@@ -134,7 +134,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 startActivity(new Intent(getContext(), UserActivity.class));
                 break;
             case R.id.text_car:
-                startActivity(new Intent(getContext(), VehicleActivity.class));
+                if (SaveUtils.getCar() != null && !Utility.isEmpty(SaveUtils.getCar().getSimcode())) {
+                    startActivity(new Intent(getContext(), VehicleActivity.class));
+                } else {
+                    startActivity(new Intent(getContext(), BindActivity.class));
+                }
                 break;
 
             case R.id.text_bind:

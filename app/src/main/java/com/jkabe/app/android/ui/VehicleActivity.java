@@ -1,10 +1,8 @@
 package com.jkabe.app.android.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import com.jkabe.app.android.R;
 import com.jkabe.app.android.base.BaseActivity;
 import com.jkabe.app.android.bean.CarInfo;
@@ -19,9 +17,7 @@ import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
 import com.jkabe.app.android.util.ToastUtil;
 import com.jkabe.app.android.util.Utility;
-
 import org.json.JSONObject;
-
 import java.math.BigDecimal;
 import java.util.Map;
 

@@ -1,8 +1,17 @@
 package com.jkabe.app.android.config;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+
+import com.jkabe.app.android.R;
+import com.jkabe.app.android.base.BaseActivity;
+import com.jkabe.app.android.base.BaseApplication;
+import com.jkabe.app.android.ui.EarlyActivity;
 import com.jkabe.app.android.util.LogUtils;
+
+import cn.jpush.android.api.BasicPushNotificationBuilder;
 import cn.jpush.android.api.CmdMessage;
 import cn.jpush.android.api.CustomMessage;
 import cn.jpush.android.api.JPushInterface;
@@ -20,20 +29,17 @@ public class PushMessageReceiver extends JPushMessageReceiver {
 
     @Override
     public void onNotifyMessageOpened(Context context, NotificationMessage message) {
-        LogUtils.e("[notificationContent=] " + message.notificationContent+"notificationTitle="+message.notificationTitle);
+        LogUtils.e("[notificationContent=] " + message.notificationContent + "notificationTitle=" + message.notificationTitle);
         try {
-            Intent intent=new Intent();
-            intent.setAction("com.push.msg");
-            context.sendBroadcast(intent);
             //打开自定义的Activity
-//            Intent i = new Intent(context, TestActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString(JPushInterface.EXTRA_NOTIFICATION_TITLE,message.notificationTitle);
-//            bundle.putString(JPushInterface.EXTRA_ALERT,message.notificationContent);
-//            i.putExtras(bundle);
-//            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
-//            context.startActivity(i);
+            Intent i = new Intent(context, EarlyActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(JPushInterface.EXTRA_NOTIFICATION_TITLE, message.notificationTitle);
+            bundle.putString(JPushInterface.EXTRA_ALERT, message.notificationContent);
+            i.putExtras(bundle);
+            //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(i);
         } catch (Throwable throwable) {
 
         }
@@ -106,6 +112,7 @@ public class PushMessageReceiver extends JPushMessageReceiver {
     @Override
     public void onMobileNumberOperatorResult(Context context, JPushMessage jPushMessage) {
         TagAliasOperatorHelper.getInstance().onMobileNumberOperatorResult(context, jPushMessage);
+        setStyleBasic();
         super.onMobileNumberOperatorResult(context, jPushMessage);
     }
 
@@ -118,6 +125,18 @@ public class PushMessageReceiver extends JPushMessageReceiver {
     @Override
     public void onNotificationSettingsCheck(Context context, boolean isOn, int source) {
         super.onNotificationSettingsCheck(context, isOn, source);
+    }
+
+
+    /**
+     * 设置通知提示方式 - 基础属性
+     */
+    private void setStyleBasic() {
+        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(BaseApplication.getContext());
+        builder.statusBarDrawable = R.drawable.ic_launcher;
+        builder.notificationFlags = Notification.FLAG_AUTO_CANCEL;  //设置为点击后自动消失
+        builder.notificationDefaults = Notification.DEFAULT_SOUND;  //设置为铃声（ Notification.DEFAULT_SOUND）或者震动（ Notification.DEFAULT_VIBRATE）
+        JPushInterface.setPushNotificationBuilder(1, builder);
     }
 
 }

@@ -25,8 +25,6 @@ public class DateUtils {
     }
 
 
-
-
     public static String getLongTime(long endTime) {
         long second = endTime / 1000;//获取所有秒数
         long minute1 = second / 60;//获得分钟数
@@ -57,6 +55,10 @@ public class DateUtils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return format.format(date);
     }
+
+
+
+
 
     public static String getNextDay(long endTime) {
         long second = (endTime - new Date().getTime()) / 1000;//获取所有秒数
@@ -143,11 +145,39 @@ public class DateUtils {
     }
 
 
+    /**
+     * 20 * 字符串转换成日期
+     * 21 * @param str
+     * 22 * @return date
+     * 23
+     */
+    public static Date StrToDate1(String str) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = format.parse(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
+
+
     public static String DateToStr(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String str = format.format(date);
         return str;
     }
+
+
+    public static String DateToStr2(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+        String str = format.format(date);
+        return str;
+    }
+
 
     public static String DateToStr1(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");

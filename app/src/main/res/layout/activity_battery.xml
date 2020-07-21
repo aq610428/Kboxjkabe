@@ -37,7 +37,7 @@
                     android:drawableLeft="@mipmap/icon_voltage"
                     android:drawablePadding="5dp"
                     android:gravity="center"
-                    android:text="电压提醒："
+                    android:text="电压状态："
                     android:textColor="@color/black01"
                     android:textSize="13sp" />
 
@@ -77,7 +77,7 @@
                     android:drawableLeft="@mipmap/icon_surface"
                     android:drawablePadding="5dp"
                     android:gravity="center"
-                    android:text="电压提醒："
+                    android:text="电压读数："
                     android:textColor="@color/black01"
                     android:textSize="13sp" />
 
@@ -85,7 +85,6 @@
                     android:id="@+id/text_surface"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/icon_speed"
                     android:gravity="center"
                     android:textColor="@color/colorAccent"
                     android:textSize="13sp" />
@@ -124,10 +123,10 @@
                 android:textColor="@color/black33"
                 android:textSize="14sp" />
 
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/chartview"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/spread_line_chart"
                 android:layout_width="match_parent"
-                android:layout_height="220dp" />
+                android:layout_height="180dp" />
         </LinearLayout>
 
 

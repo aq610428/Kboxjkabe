@@ -11,17 +11,29 @@ import androidx.fragment.app.FragmentTabHost;
 import com.jkabe.app.android.R;
 import com.jkabe.app.android.base.BaseActivity1;
 import com.jkabe.app.android.base.BaseApplication;
+import com.jkabe.app.android.bean.CommonalityModel;
+import com.jkabe.app.android.config.Api;
+import com.jkabe.app.android.config.NetWorkListener;
+import com.jkabe.app.android.config.okHttpModel;
 import com.jkabe.app.android.ui.fragment.CarFragment;
 import com.jkabe.app.android.ui.fragment.CarLeftFragment;
 import com.jkabe.app.android.ui.fragment.MineFragment;
 import com.jkabe.app.android.ui.fragment.RecordFragment;
+import com.jkabe.app.android.util.Constants;
+import com.jkabe.app.android.util.Md5Util;
+import com.jkabe.app.android.util.SaveUtils;
+import com.jkabe.app.android.util.ToastUtil;
+import com.jkabe.app.android.util.Utility;
+import org.json.JSONObject;
+import java.util.Map;
+import cn.jpush.android.api.JPushInterface;
 
 /*****
  *
  * 首页
  *
  */
-public class MainActivity extends BaseActivity1 {
+public class MainActivity extends BaseActivity1 implements NetWorkListener {
     private Class fragments[] = {CarFragment.class, CarLeftFragment.class, RecordFragment.class, MineFragment.class};
     private int drawables[] = {R.drawable.book_drawable, R.drawable.chosen_drawable,  R.drawable.shelf_drawable,R.drawable.me_drawable};
     private String textviewArray[] = {"我的车", "车生活", "资产", "我的"};
@@ -36,6 +48,7 @@ public class MainActivity extends BaseActivity1 {
     @Override
     protected void initView() {
         mTabHost = getView(R.id.mTabHost);
+        queryPush();
     }
 
     @Override
@@ -137,5 +150,48 @@ public class MainActivity extends BaseActivity1 {
 
         TextView tv_mine3 = mTabHost.getTabWidget().getChildAt(3).findViewById(R.id.textview);
         tv_mine3.setTextColor(Color.parseColor("#666666"));
+    }
+
+    /*******绑定Jpush
+     * @param ********/
+    public void queryPush() {
+        String registrationID = JPushInterface.getRegistrationID(this);
+        String sign = "memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID + "&registerid=" + registrationID + Constants.SECREKEY;
+        showProgressDialog(this, false);
+        Map<String, String> params = okHttpModel.getParams();
+        params.put("apptype", Constants.TYPE);
+        params.put("partnerid", Constants.PARTNERID);
+        params.put("memberid",  SaveUtils.getSaveInfo().getId() + "");
+        params.put("registerid", registrationID + "");
+        params.put("sign", Md5Util.encode(sign));
+        okHttpModel.get(Api.GET_PUSH_VERSION, params, Api.GET_PUSH_VERSION_ID, this);
+    }
+
+
+    @Override
+    public void onSucceed(JSONObject object, int id, CommonalityModel commonality) {
+        if (object != null && commonality != null && !Utility.isEmpty(commonality.getStatusCode())) {
+            if (Constants.SUCESSCODE.equals(commonality.getStatusCode())) {
+                switch (id) {
+                    case Api.GET_PUSH_VERSION_ID:
+                        ToastUtil.showToast(commonality.getErrorDesc());
+                        break;
+
+                }
+            }else{
+                ToastUtil.showToast(commonality.getErrorDesc());
+            }
+        }
+        stopProgressDialog();
+    }
+
+    @Override
+    public void onFail() {
+        stopProgressDialog();
+    }
+
+    @Override
+    public void onError(Exception e) {
+        stopProgressDialog();
     }
 }

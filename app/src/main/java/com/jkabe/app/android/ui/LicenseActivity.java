@@ -1,6 +1,7 @@
 package com.jkabe.app.android.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,6 +17,7 @@ import com.jkabe.app.android.util.Constants;
 import com.jkabe.app.android.util.LogUtils;
 import com.jkabe.app.android.util.Md5Util;
 import com.jkabe.app.android.util.SaveUtils;
+import com.jkabe.app.android.util.ToastUtil;
 import com.jkabe.app.android.weight.MediaLoader;
 import com.jkabe.app.android.weight.RuntimeRationale;
 import com.lzy.okgo.OkGo;
@@ -47,7 +49,7 @@ import top.zibin.luban.OnCompressListener;
 public class LicenseActivity extends BaseActivity {
     private ImageView iv_photo;
     private RelativeLayout rl_photo;
-    private TextView title_text_tv, title_left_btn, text_sumber;
+    private TextView title_text_tv, title_left_btn;
 
     @Override
     protected void initCreate(Bundle savedInstanceState) {
@@ -58,7 +60,6 @@ public class LicenseActivity extends BaseActivity {
     @Override
     protected void initView() {
         iv_photo = getView(R.id.iv_photo);
-        text_sumber = getView(R.id.text_sumber);
         rl_photo = getView(R.id.rl_photo);
         title_text_tv = getView(R.id.title_text_tv);
         title_left_btn = getView(R.id.title_left_btn);
@@ -167,7 +168,9 @@ public class LicenseActivity extends BaseActivity {
                         JSONObject jsonObject = new JSONObject(response.body());
                         LogUtils.e(jsonObject);
                         result = jsonObject.optString("result");
-                        GlideUtils.setImageUrl(result,iv_photo);
+                        GlideUtils.CreateImageRound(result,iv_photo,5);
+                        ToastUtil.showToast(jsonObject.optString("message")+"");
+                        SaveUtils.getCar().setIsreal(2);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

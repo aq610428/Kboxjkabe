@@ -184,6 +184,11 @@ public interface Api {
     int GET_MODEL_LISR_ID = 100038;
 
 
+    /******注册成功******/
+    String GET_PUSH_VERSION = Config.getOpenNewApi() + "/member/uploadjgandroidregisterid";
+    int GET_PUSH_VERSION_ID = 100029;
+
+
     /******绑定车辆******/
     String GET_MODEL_BIND = Config.getOpenNewApi() + "/device/bindingdeviceinfo";
     int GET_MODEL_BIND_ID = 100039;

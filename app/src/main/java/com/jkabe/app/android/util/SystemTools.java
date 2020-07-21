@@ -168,7 +168,7 @@ public final class SystemTools {
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(activity, "com.car.notver.provider", file);
+            Uri contentUri = FileProvider.getUriForFile(activity, "com.jkabe.app.android.provider", file);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");

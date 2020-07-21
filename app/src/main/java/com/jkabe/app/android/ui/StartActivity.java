@@ -36,7 +36,6 @@ public class StartActivity extends BaseActivity {
                 }else{
                     startActivity(new Intent(StartActivity.this, LoginActivity.class));
                 }
-
                 finish();
             }
         }, 2000);

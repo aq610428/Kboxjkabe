@@ -67,7 +67,9 @@ import com.jkabe.app.android.weight.SensorEventHelper;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.runtime.Permission;
+
 import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -144,7 +146,7 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
         super.onResume();
         StatusBarUtil.setTranslucentStatus(getActivity());
         initView();
-        qury();
+        polling();
     }
 
     private void initView() {
@@ -195,18 +197,11 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.text_num) {
-            if ("绑定".equals(text_num)) {
-                startActivity(new Intent(getContext(), BindActivity.class));
-            } else {
-                startActivity(new Intent(getContext(), VehicleActivity.class));
-            }
-        } else {
-            if (carVo == null) {
-                ToastUtil.showToast("请您绑定车辆");
-                return;
-            }
+        if (carInfo != null && !Utility.isEmpty(carInfo.getSimcode())) {
             switch (v.getId()) {
+                case R.id.text_num:
+                    startActivity(new Intent(getContext(), VehicleActivity.class));
+                    break;
                 case R.id.text_attery:
                     startActivity(new Intent(getContext(), BatteryActivity.class));
                     break;
@@ -242,8 +237,9 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
                     break;
 
             }
+        } else {
+            startActivity(new Intent(getContext(), BindActivity.class));
         }
-
     }
 
 
@@ -253,7 +249,6 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
             if (!mFirstFix) {
                 mFirstFix = true;
                 PreferenceUtils.setPrefString(getContext(), Constants.CITY, amapLocation.getCity());
-
             }
         } else {
             String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
@@ -293,7 +288,7 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
     }
 
 
-    private void qury() {
+    private void polling() {
         String sign = "memberid=" + SaveUtils.getSaveInfo().getId() + "&partnerid=" + Constants.PARTNERID + Constants.SECREKEY;
         showProgressDialog(getActivity(), false);
         Map<String, String> params = okHttpModel.getParams();
@@ -346,6 +341,7 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
         converter.from(CoordinateConverter.CoordType.GPS);
         if (!Utility.isEmpty(carVo.getLocationInfo().getLat())) {
             try {
+                aMap.clear();
                 rl_edition.setVisibility(View.VISIBLE);
                 DPoint dPoint = new DPoint();
                 dPoint.setLatitude(Double.parseDouble(carVo.getLocationInfo().getLat()));
@@ -379,11 +375,12 @@ public class CarFragment extends BaseFragment implements View.OnClickListener, L
         if (carInfo != null && !Utility.isEmpty(carInfo.getCarcard())) {
             SaveUtils.saveCar(carInfo);
             text_num.setText(carInfo.getCarcard());
+            mHandler.removeCallbacks(runnable);
+            mHandler.postDelayed(runnable, 100);
         } else {
             text_num.setText("绑定");
         }
-        mHandler.removeCallbacks(runnable);
-        mHandler.postDelayed(runnable, 100);
+
     }
 
     /*******1分钟定位一次*****/

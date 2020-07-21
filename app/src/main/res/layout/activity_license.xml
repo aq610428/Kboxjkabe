@@ -40,20 +40,8 @@
         <ImageView
             android:id="@+id/iv_photo"
             android:layout_width="match_parent"
+            android:scaleType="centerCrop"
             android:layout_height="match_parent" />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/text_sumber"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="80dp"
-        android:background="@drawable/shape_license"
-        android:gravity="center"
-        android:text="确  定"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/ctv_sizen_14" />
 
 </LinearLayout>
